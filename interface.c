@@ -3,6 +3,8 @@
 #include <windows.h>
 #include <string.h>
 
+#define PORTA_COM "COM8"
+
 void clearInputBuffer()
 {
     int c;
@@ -23,7 +25,7 @@ void enviarComando(HANDLE hSerial, const char* comando)
     printf("Comando enviado.\n");
 }
 
-void lerEstadoLED(HANDLE hSerial, char* buffer, DWORD* bytesRead)
+void lerEstado(HANDLE hSerial, char* buffer, DWORD* bytesRead)
 {
     if (!ReadFile(hSerial, buffer, sizeof(buffer), bytesRead, NULL))
     {
@@ -43,11 +45,11 @@ void exibirEstadoLED(HANDLE hSerial, const char* buffer, DWORD bytesRead)
     {
         if (buffer[0] == '1')
         {
-            printf("O LED está ligado.\n");
+            printf("O LED está desligado.\n");
         }
         else if (buffer[0] == '0')
         {
-            printf("O LED está desligado.\n");
+            printf("O LED está ligado.\n");
         }
     }
     while (bytesRead > 0 && buffer[bytesRead - 1] != '\n')
@@ -105,7 +107,7 @@ void exibirCorRGB(CorRGB cor)
 int main()
 {
     HANDLE hSerial;
-    char portName[] = "COM5";  // Substitua pela porta serial correta do seu Arduino
+    char portName[] = PORTA_COM;  // Substitua pela porta serial correta do seu Arduino
     char buffer[2];
     DWORD bytesRead;
 
@@ -153,7 +155,7 @@ int main()
         printf("  7 - Para exibir a cor do RGB\n");
         printf("  8 - Para mudar a cor RGB pelo potenciometro\n");
         printf("  9 - Para solicitar a leitura do LDR\n");
-
+        printf("  0 - Para sair\n");
         fgets(userInput, sizeof(userInput), stdin);
 
         // Remove o caractere de nova linha (\n) da string de input
@@ -171,7 +173,7 @@ int main()
         else if (strcmp(userInput, "3") == 0)
         {
             enviarComando(hSerial, "3");
-            lerEstadoLED(hSerial, buffer, &bytesRead);
+            lerEstado(hSerial, buffer, &bytesRead);
             exibirEstadoLED(hSerial, buffer, bytesRead);
         }
         else if (strcmp(userInput, "4") == 0)
@@ -189,18 +191,22 @@ int main()
         else if (strcmp(userInput, "7") == 0)
         {
             enviarComando(hSerial, "7");
-            lerEstadoLED(hSerial, buffer, &bytesRead);
+            lerEstado(hSerial, buffer, &bytesRead);
             CorRGB cor = buffer[0];
             exibirCorRGB(cor);
-        }
-        else if (strcmp(userInput, "9") == 0)
-        {
-            enviarComando(hSerial, "9");
-            lerEstadoLED(hSerial, buffer, &bytesRead);
         }
         else if (strcmp(userInput, "8") == 0)
         {
             enviarComando(hSerial, "8");
+        }
+        else if (strcmp(userInput, "9") == 0)
+        {
+            enviarComando(hSerial, "9");
+            lerEstado(hSerial, buffer, &bytesRead);
+        }
+        else if (strcmp(userInput, "0") == 0)
+        {
+            break;
         }
         else
         {
