@@ -52,8 +52,8 @@ int main()
         char userInput[2];
         printf("Digite:\n");
         printf("  1 - Para ligar o LED\n");
-        printf("  2 - Para verificar o estado do LED\n");
-        printf("  3 - Para imprimir o estado do LED\n");
+        printf("  2 - Para desligar o LED\n");
+        printf("  3 - Para ler o estado do LED\n");
         printf("Opção: ");
         fgets(userInput, sizeof(userInput), stdin);
 
@@ -84,38 +84,6 @@ int main()
                 return 1;
             }
             printf("Comando para verificar o estado do LED enviado.\n");
-
-            // Lê o estado do LED
-            if (!ReadFile(hSerial, buffer, sizeof(buffer), &bytesRead, NULL))
-            {
-                printf("Erro ao ler o estado do LED.\n");
-                CloseHandle(hSerial);
-                return 1;
-            }
-
-            // Verifica o estado do LED e exibe na tela
-            if (bytesRead > 0)
-            {
-                if (buffer[0] == '1')
-                {
-                    printf("O LED está ligado.\n");
-                }
-                else if (buffer[0] == '0')
-                {
-                    printf("O LED está desligado.\n");
-                }
-            }
-
-            // Limpa o buffer de leitura da porta serial
-            while (bytesRead > 0 && buffer[bytesRead - 1] != '\n')
-            {
-                if (!ReadFile(hSerial, buffer, sizeof(buffer), &bytesRead, NULL))
-                {
-                    printf("Erro ao ler o estado do LED.\n");
-                    CloseHandle(hSerial);
-                    return 1;
-                }
-            }
         }
         else if (strcmp(userInput, "3") == 0) {
             // Escreve na porta serial para solicitar o estado do LED
@@ -149,8 +117,6 @@ int main()
                     printf("O LED está desligado.\n");
                 }
             }
-
-            // Limpa o buffer de leitura da porta serial
             while (bytesRead > 0 && buffer[bytesRead - 1] != '\n')
             {
                 if (!ReadFile(hSerial, buffer, sizeof(buffer), &bytesRead, NULL))
