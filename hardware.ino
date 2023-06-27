@@ -96,6 +96,9 @@ void loop()
         {
           acendeCiano();
         }        
+    } else if (command == '9') {
+      valorldr = analogRead(PIN_LDR);
+      Serial.println(valorldr);
     }
   }  
 }
