@@ -33,10 +33,8 @@ void lerEstado(HANDLE hSerial, char* buffer, DWORD* bytesRead)
         CloseHandle(hSerial);
         exit(1);
     }
-    else if (buffer[0] == '9')
-    {
-        printf("Leitura do LDR: %s\n", buffer + 1);
-    }
+    clearInputBuffer();
+    printf("Leitura do LDR: %s\n", buffer);
 }
 
 void exibirEstadoLED(HANDLE hSerial, const char* buffer, DWORD bytesRead)
