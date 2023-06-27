@@ -98,7 +98,6 @@ void loop()
         }        
     }
   }  
-  delay(10);
 }
 
 void acendeVermelho()
