@@ -54,6 +54,10 @@ int main()
         printf("  1 - Para ligar o LED\n");
         printf("  2 - Para desligar o LED\n");
         printf("  3 - Para ler o estado do LED\n");
+        printf("  4 - Para colocar o RGB como Vermelho\n");
+        printf("  5 - Para colocar o RGB como Azul\n");
+        printf("  6 - Para colocar o RGB como Verde\n");
+        prinfg("  7 - Para exibir a cor do RGB\n");
         printf("Opção: ");
         fgets(userInput, sizeof(userInput), stdin);
 
@@ -127,7 +131,86 @@ int main()
                 }
             }
         }
+        else if (strcmp(userInput, "4") == 0) {
+            // Escreve na porta serial para verificar o estado do LED
+            char data[] = "4";
+            DWORD bytesWritten;
+            if (!WriteFile(hSerial, data, sizeof(data), &bytesWritten, NULL))
+            {
+                printf("Erro ao escrever na porta serial.\n");
+                CloseHandle(hSerial);
+                return 1;
+            }
+            printf("Comando para mudar a cor do RGB enviado.\n");
+        }
+        else if (strcmp(userInput, "5") == 0) {
+            // Escreve na porta serial para verificar o estado do LED
+            char data[] = "5";
+            DWORD bytesWritten;
+            if (!WriteFile(hSerial, data, sizeof(data), &bytesWritten, NULL))
+            {
+                printf("Erro ao escrever na porta serial.\n");
+                CloseHandle(hSerial);
+                return 1;
+            }
+            printf("Comando para mudar a cor do RGB enviado.\n");
+        }
+        else if (strcmp(userInput, "6") == 0) {
+            // Escreve na porta serial para verificar o estado do LED
+            char data[] = "6";
+            DWORD bytesWritten;
+            if (!WriteFile(hSerial, data, sizeof(data), &bytesWritten, NULL))
+            {
+                printf("Erro ao escrever na porta serial.\n");
+                CloseHandle(hSerial);
+                return 1;
+            }
+            printf("Comando para mudar a cor do RGB enviado.\n");
+        } else if (strcmp(userInput, "7") == 0) {
+            char data[] = "7";
+            DWORD bytesWritten;
+            if (!WriteFile(hSerial, data, sizeof(data), &bytesWritten, NULL))
+            {
+                printf("Erro ao escrever na porta serial.\n");
+                CloseHandle(hSerial);
+                return 1;
+            }
+            printf("Comando para imprimir o estado do LED enviado.\n");
 
+            // Lê o estado do LED
+            if (!ReadFile(hSerial, buffer, sizeof(buffer), &bytesRead, NULL))
+            {
+                printf("Erro ao ler o estado do LED.\n");
+                CloseHandle(hSerial);
+                return 1;
+            }
+
+            // Verifica o estado do LED e exibe na tela
+            if (bytesRead > 0)
+            {
+                if (buffer[0] == '1')
+                {
+                    printf("Vermelho.\n");
+                }
+                else if (buffer[0] == '2')
+                {
+                    printf("Verde\n");
+                }
+                else if (buffer[0] == '3')
+                {
+                    printf("Azul\n");
+                }
+            }
+            while (bytesRead > 0 && buffer[bytesRead - 1] != '\n')
+            {
+                if (!ReadFile(hSerial, buffer, sizeof(buffer), &bytesRead, NULL))
+                {
+                    printf("Erro ao ler o estado do LED.\n");
+                    CloseHandle(hSerial);
+                    return 1;
+                }
+            }
+        }
         // Limpa o buffer de entrada (stdin)
         clearInputBuffer();
     }
