@@ -31,6 +31,10 @@ void lerEstadoLED(HANDLE hSerial, char* buffer, DWORD* bytesRead)
         CloseHandle(hSerial);
         exit(1);
     }
+    else if (buffer[0] == '9')
+    {
+        printf("Leitura do LDR: %s\n", buffer + 1);
+    }
 }
 
 void exibirEstadoLED(HANDLE hSerial, const char* buffer, DWORD bytesRead)
@@ -147,6 +151,8 @@ int main()
         printf("  5 - Para colocar o RGB como Verde\n");
         printf("  6 - Para colocar o RGB como Azul\n");
         printf("  7 - Para exibir a cor do RGB\n");
+        printf("  8 - Para mudar a cor RGB pelo potenciometro\n");
+        printf("  9 - Para solicitar a leitura do LDR\n");
 
         fgets(userInput, sizeof(userInput), stdin);
 
@@ -186,6 +192,15 @@ int main()
             lerEstadoLED(hSerial, buffer, &bytesRead);
             CorRGB cor = buffer[0];
             exibirCorRGB(cor);
+        }
+        else if (strcmp(userInput, "9") == 0)
+        {
+            enviarComando(hSerial, "9");
+            lerEstadoLED(hSerial, buffer, &bytesRead);
+        }
+        else if (strcmp(userInput, "8") == 0)
+        {
+            enviarComando(hSerial, "8");
         }
         else
         {
